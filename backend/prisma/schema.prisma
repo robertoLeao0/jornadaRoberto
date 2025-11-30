@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN_PLENO
+  GESTOR_MUNICIPIO
+  SERVIDOR
+}
+
+enum ActionStatus {
+  PENDENTE
+  CONCLUIDO
+}
+
+enum DayCategory {
+  CORPO
+  MENTE
+  ESPIRITO
+}
+
+model User {
+  id             String    @id @default(uuid())
+  name           String
+  email          String    @unique
+  passwordHash   String
+  role           UserRole
+  municipalityId String?
+  municipality   Municipality? @relation(fields: [municipalityId], references: [id])
+  actionLogs     ActionLog[]
+  ranking        RankingSummary[]
+  deletedAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Municipality {
+  id        String   @id @default(uuid())
+  name      String
+  state     String
+  active    Boolean  @default(true)
+  projects  Project[]
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id            String        @id @default(uuid())
+  name          String
+  description   String
+  startDate     DateTime
+  endDate       DateTime
+  municipalityId String
+  municipality  Municipality  @relation(fields: [municipalityId], references: [id])
+  isActive      Boolean       @default(true)
+  totalDays     Int           @default(21)
+  dayTemplates  DayTemplate[]
+  actionLogs    ActionLog[]
+  ranking       RankingSummary[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model DayTemplate {
+  id          String      @id @default(uuid())
+  projectId   String
+  project     Project     @relation(fields: [projectId], references: [id])
+  dayNumber   Int
+  title       String
+  description String
+  category    DayCategory
+  points      Int          @default(1)
+  requiresPhoto Boolean    @default(false)
+
+  @@unique([projectId, dayNumber], name: "projectId_dayNumber")
+}
+
+model ActionLog {
+  id          String       @id @default(uuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+  projectId   String
+  project     Project      @relation(fields: [projectId], references: [id])
+  dayNumber   Int
+  status      ActionStatus @default(PENDENTE)
+  photoUrl    String?
+  notes       String?
+  completedAt DateTime?
+  pointsAwarded Int        @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@unique([userId, projectId, dayNumber], name: "userId_projectId_dayNumber")
+}
+
+model RankingSummary {
+  userId         String
+  projectId      String
+  totalPoints    Int
+  completedDays  Int
+  completionRate Float
+  user           User    @relation(fields: [userId], references: [id])
+  project        Project @relation(fields: [projectId], references: [id])
+
+  @@id([userId, projectId])
+}

@@ -1,0 +1,22 @@
+### Login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "senha123"
+}
+
+### Usuário logado
+GET http://localhost:3000/api/auth/me
+Authorization: Bearer {{accessToken}}
+
+### Criar município
+POST http://localhost:3000/api/municipalities
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "name": "Cidade Exemplo",
+  "state": "SP"
+}
