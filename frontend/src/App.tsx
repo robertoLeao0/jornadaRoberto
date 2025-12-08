@@ -26,6 +26,7 @@ import AdminUsersList from './pages/admin/users/List';
 import AdminCreateUser from './pages/admin/users/Create';
 import AdminProjectsList from './pages/admin/projects/List';
 import AdminProjectCreate from './pages/admin/projects/Create';
+import EditTask from './pages/admin/projects/Edit';
 import ProjectTasks from './pages/admin/projects/Tasks';
 
 
@@ -71,8 +72,10 @@ function DashboardWrapper() {
         <Route path="admin/users/create" element={<AdminCreateUser />} />
         <Route path="admin/projects" element={<AdminProjectsList />} /> 
         <Route path="admin/projects/create" element={<AdminProjectCreate />} />
+        <Route path="admin/projects/edit/:id" element={<EditTask />} />
         <Route path="admin/projects/:projectId/tasks" element={<ProjectTasks />} />
         <Route path="gestor" element={<GestorDashboard />} />
+        
         
         {/* Rota Padrão: Redireciona para o dashboard correto */}
         {isDashboardRoute && <Route path="/" element={<Navigate to={userBaseRoute} replace />} />}
