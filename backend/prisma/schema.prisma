@@ -67,6 +67,20 @@ model Project {
   updatedAt     DateTime      @updatedAt
 }
 
+
+model Task {
+  id           Int      @id @default(autoincrement())
+  nome         String
+  descricao    String?  // O ? significa opcional
+  dataPrevista DateTime
+  ativo        Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("tasks") // Nome da tabela no banco
+}
+
+
 model DayTemplate {
   id          String      @id @default(uuid())
   projectId   String

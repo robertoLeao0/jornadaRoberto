@@ -9,8 +9,17 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateUserDto) {
-    const passwordHash = await bcrypt.hash(dto.password, 10);
-    return this.prisma.user.create({ data: { ...dto, passwordHash } });
+    // Cria um objeto de dados mutável a partir do DTO
+    const data: any = { ...dto };
+    
+    // Gera o hash da senha
+    data.passwordHash = await bcrypt.hash(data.password, 10);
+    
+    // Remove o campo 'password' em texto puro para que o Prisma não tente salvá-lo
+    delete data.password;
+    
+    // Cria o usuário no banco
+    return this.prisma.user.create({ data });
   }
 
   async findAll() {

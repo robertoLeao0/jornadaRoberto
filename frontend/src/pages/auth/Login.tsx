@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLogin } from '../hooks/useAuth';
+import { useLogin } from '../../hooks/useAuth';
 
 const roleToPath: Record<string, string> = {
   ADMIN_PLENO: '/dashboard/admin',
