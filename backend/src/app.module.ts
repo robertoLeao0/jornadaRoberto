@@ -10,6 +10,11 @@ import { ActionLogsModule } from './modules/action-logs/action-logs.module';
 import { RankingModule } from './modules/ranking/ranking.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { TaskModule } from './tasks/task.module';
+
+// integrations
+import { IntegrationsModule } from './integrations/integrations.module';
+
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -22,6 +27,7 @@ import { TaskModule } from './tasks/task.module';
     RankingModule,
     ReportsModule,
     TaskModule,
+    IntegrationsModule,
   ],
   providers: [PrismaService],
 })

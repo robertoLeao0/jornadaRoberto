@@ -30,6 +30,8 @@ import AdminProjectCreate from './pages/admin/projects/Create';
 import EditTask from './pages/admin/projects/Edit';
 import ProjectTasks from './pages/admin/projects/Tasks';
 
+import Integrations from './pages/admin/integrations';
+
 
 // Serviços
 import api from './services/api'; 
@@ -77,6 +79,8 @@ function DashboardWrapper() {
         <Route path="admin/projects/edit/:id" element={<EditTask />} />
         <Route path="admin/projects/:projectId/tasks" element={<ProjectTasks />} />
         <Route path="gestor" element={<GestorDashboard />} />
+
+        <Route path="/admin/integrations" element={<Integrations />} />
         
         
         {/* Rota Padrão: Redireciona para o dashboard correto */}

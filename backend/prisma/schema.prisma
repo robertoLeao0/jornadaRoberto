@@ -25,19 +25,24 @@ enum DayCategory {
 }
 
 model User {
-  id             String    @id @default(uuid())
-  name           String
-  email          String    @unique
-  passwordHash   String
-  role           UserRole
-  municipalityId String?
-  municipality   Municipality? @relation(fields: [municipalityId], references: [id])
-  actionLogs     ActionLog[]
-  ranking        RankingSummary[]
-  deletedAt      DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id                     String    @id @default(uuid())
+  name                   String
+  email                  String    @unique
+  passwordHash           String
+  role                   UserRole
+  municipalityId         String?
+  municipality           Municipality? @relation(fields: [municipalityId], references: [id])
+  actionLogs             ActionLog[]
+  ranking                RankingSummary[]
+  deletedAt              DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  // New fields for integrations
+  phone                  String?   @unique
+  manychatSubscriberId   String?   @unique
 }
+
 
 model Municipality {
   id        String   @id @default(uuid())
@@ -79,6 +84,55 @@ model Task {
 
   @@map("tasks") // Nome da tabela no banco
 }
+
+
+model IntegrationSetting {
+  id             String   @id @default(uuid())
+  name           String
+  projectId      String?
+  enabled        Boolean  @default(false)
+  webhookSecret  String?
+  apiKey         String?
+  configJson     Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([name, projectId])
+}
+
+model ManychatConnection {
+  id               String   @id @default(uuid())
+  projectId        String?
+  provider         String   @default("manychat")
+  connected        Boolean  @default(false)
+  accessToken      String?
+  refreshToken     String?
+  subscriberCount  Int?     @default(0)
+  lastSyncAt       DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([provider, projectId])
+}
+
+model ScheduledMessage {
+  id           String   @id @default(uuid())
+  projectId    String?
+  title        String
+  body         String
+  mediaUrl     String?
+  targetType   String
+  targetValue  String?
+  scheduledAt  DateTime
+  repeatCron   String?
+  status       String   @default("scheduled")
+  lastResult   Json?
+  createdBy    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+
 
 
 model DayTemplate {
